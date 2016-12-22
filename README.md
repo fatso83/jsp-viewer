@@ -1,18 +1,19 @@
 Simpe JSP viewer
 ======================================
 
-This is a maven project, to build it:
+A very focused tool that does one thing: it serves JSPs
+and can set system properties used in that jsp from a 
+properties file.
 
-    $ mvn clean package
+## Usage
+`view-jsp ./jsp-dir my-properties.txt`
 
-To run the example `com.github.fatso83.Main`
+This will fire up a server on port 8080 on localhost that
+will display the jsp. You need to have `java` on the path.
 
-    $ mvn exec:exec
+## Build
+Just issue `./build` to end up with a executable `view-jsp`.
 
-Open your web browser to:
-
-    http://localhost:8080/  
-
-To stop Jetty:
-
-  use <kbd>CTRL</kbd>+<kbd>C</kbd>
+## Dependencies
+- For running: only Java (I think Java 7 will do)
+- For building: Maven 3
