@@ -34,6 +34,7 @@ fi
 
 # use this shell script as a jar, as the jar file is embedded!
 java -Dwebroot="\$1" -Dport="\$2"  -jar "\$0"
+exit 0
 EOF
 
     echo "Embedding the jar file into the script"
