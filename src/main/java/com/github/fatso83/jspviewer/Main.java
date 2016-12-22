@@ -19,12 +19,14 @@
 package com.github.fatso83.jspviewer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.SimpleInstanceManager;
@@ -99,11 +101,21 @@ public class Main
         s = System.getProperty("port");
         if(s != null && s.length() > 0) port = Integer.parseInt(s);
 
-        String webRootIndex = System.getProperty("webroot");
-        String currentDir = Paths.get(".").toAbsolutePath().normalize().toString();
-        webRootIndex = (webRootIndex != null && webRootIndex.length() > 0)? webRootIndex : currentDir;
+        String userDir = System.getProperty("webroot");
+        String webroot = (userDir != null && userDir.length() > 0)? userDir : ".";
+        webroot = Paths.get(webroot).toAbsolutePath().normalize().toString();
 
-        Main main = new Main(port, webRootIndex);
+        // load extra system properties from file
+        if( args.length > 0 && args[0].length() > 0 ){
+            FileInputStream propFile = new FileInputStream(args[0]);
+            Properties p = new Properties(System.getProperties());
+            p.load(propFile);
+
+            // set the system properties
+            System.setProperties(p);
+        }
+
+        Main main = new Main(port, webroot);
         main.start();
         main.waitForInterrupt();
     }

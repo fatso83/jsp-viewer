@@ -20,20 +20,23 @@ create_exe(){
     cat > $EXE << EOF  
 #!/bin/sh
 function usage(){
-    echo "Usage:    \$0 <directory> [port]"
+    echo "Usage:    \$0 <directory> [properties-file.txt]"
     echo
-    echo "Example:  \$0 my-jsp-dir/ 8000"
+    echo "Example:  \$0 my-jsp-dir/ "
     echo
-    echo "The default port is 8080"
+    echo "The properties file is a Java properties file and must come on the form:"
+    echo "myprop=1"
+    echo "your.prop=2"
+    echo "These will then be set as system properties"
 }
 if [[ \$# < 1 ]]; then 
-    echo "Missing arguments \$#" >> /dev/stderr
+    echo "Missing arguments" >> /dev/stderr
     usage
     exit 1
 fi
 
 # use this shell script as a jar, as the jar file is embedded!
-java -Dwebroot="\$1" -Dport="\$2"  -jar "\$0"
+java -Dwebroot="\$1"  -jar "\$0" "\$2"
 exit 0
 EOF
 
