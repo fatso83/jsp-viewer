@@ -1,7 +1,8 @@
 #!/bin/sh
 # This setup will build a self-contained executable that can be invoked on its own
 
-JAR=./target/jspviewer-1-SNAPSHOT-jar-with-dependencies.jar
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+JAR="$SCRIPT_DIR/target/jspviewer-1-SNAPSHOT-jar-with-dependencies.jar"
 
 main(){
     build_jar
@@ -36,12 +37,19 @@ if [[ \$# < 1 ]]; then
 fi
 
 # use this shell script as a jar, as the jar file is embedded!
-java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  -Dwebroot="\$1" -jar "\$0"
+#java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  -Dwebroot="\$1" -jar "\$0"
+
+# temporary fix until I can sort out https://github.com/fatso83/jsp-viewer/issues/1
+java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     \\
+        -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  \\
+        -Dwebroot="\$1" -jar "$JAR"
+
 exit 0
 EOF
 
-    echo "Embedding the jar file into the script"
-    cat $JAR >> $EXE
+    # temporary fix until I can sort out https://github.com/fatso83/jsp-viewer/issues/1
+    #echo "Embedding the jar file into the script"
+    #cat $JAR >> $EXE
     chmod +x $EXE
     echo "Binary built:"
     /bin/ls -lh $EXE
