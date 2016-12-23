@@ -215,6 +215,7 @@ public class Main
         sch.addBean(new JspStarter(sch));
         sch.setClassLoader(getUrlClassLoader());
         sch.addServlet(jspServletHolder(), "*.jsp");
+        sch.addServlet(SessionSetter.class, "/session");
         // Add Application Servlets
         sch.addServlet(defaultServletHolder(baseUri), "/");
         return sch;

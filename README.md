@@ -11,16 +11,28 @@ any system properties needed by setting them in a
 properties file.
 
 ## Usage
-`view-jsp ./jsp-dir my-properties.txt`
+`view-jsp ./jsp-dir`
 
 This will fire up a server on port 8080 on localhost that
 will display the jsp. You need to have `java` on the path.
 
-## Getting the executable
-Either grab the executable from the [releases page](https://github.com/fatso83/jsp-viewer/releases),
- or build it yourself after cloning this repo.
+### Setting session attributes
+The `/session` path is available for easy manipulation of session attributes.
+You only need to supply the path to the jsp you want to display as the `jsp` attribute,
+and all other session vars will be set from the url.
 
-Just issue `./build` to end up with the executable `view-jsp`.
+Example:
+```
+http://localhost:8080/session?jsp=login_chainidno.jsp&cssurl=Static/styles/login.css
+```
+
+This will serve the jsp `/login_chainidno.jsp` and set the  session attribute `cssurl` to 
+`Static/styles/login.css`.
+
+
+## Installation
+Just issue `./build` to end up with a script that will reference the built jar file.
+You can put this script `view-jsp` wherever you like in your `$PATH`, such as `/usr/local/bin/`.
 
 ## Dependencies
 - For running: only Java (I think Java 7 will do)
