@@ -36,7 +36,7 @@ if [[ \$# < 1 ]]; then
 fi
 
 # use this shell script as a jar, as the jar file is embedded!
-java -Dwebroot="\$1"  -jar "\$0" "\$2"
+java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  -Dwebroot="\$1" -jar "\$0"
 exit 0
 EOF
 
