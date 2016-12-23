@@ -122,10 +122,10 @@
 -->
             <argument>-Dtomcat.util.scan.StandardJarScanFilter.jarsToScan=taglibs-standard-impl-*</argument>
             <argument>-Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip=apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*</argument>
+            <argument>-Dwebroot=.</argument>
             <argument>-cp</argument>
             <classpath />
             <argument>com.github.fatso83.jspviewer.Main</argument>
-            <argument>8080</argument>
         </arguments>
     </configuration>
 </plugin>
