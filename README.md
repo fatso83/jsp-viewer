@@ -1,4 +1,4 @@
-Simpe JSP viewer
+Simple JSP viewer
 ======================================
 
 > Serve JSPs in an easy way for quick-editing
