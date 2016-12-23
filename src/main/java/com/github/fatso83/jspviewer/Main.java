@@ -28,6 +28,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Properties;
 
+import org.eclipse.jetty.util.resource.*;
+
+
+import org.apache.jasper.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.SimpleInstanceManager;
 import org.apache.tomcat.util.scan.StandardJarScanner;
@@ -101,36 +111,34 @@ public class Main
         s = System.getProperty("port");
         if(s != null && s.length() > 0) port = Integer.parseInt(s);
 
-        String userDir = System.getProperty("webroot");
-        String webroot = (userDir != null && userDir.length() > 0)? userDir : ".";
-        webroot = Paths.get(webroot).toAbsolutePath().normalize().toString();
+//        // load extra system properties from file
+//        if( args.length > 0 && args[0].length() > 0 ){
+//            FileInputStream propFile = new FileInputStream(args[0]);
+//            Properties p = new Properties(System.getProperties());
+//            p.load(propFile);
+//
+//            // set the system properties
+//            System.setProperties(p);
+//        }
 
-        // load extra system properties from file
-        if( args.length > 0 && args[0].length() > 0 ){
-            FileInputStream propFile = new FileInputStream(args[0]);
-            Properties p = new Properties(System.getProperties());
-            p.load(propFile);
-
-            // set the system properties
-            System.setProperties(p);
-        }
-
-        Main main = new Main(port, webroot);
+        Main main = new Main(port, args);
         main.start();
         main.waitForInterrupt();
     }
 
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
+    private String[] resourcePaths;
     private int port;
     private Server server;
     private URI serverURI;
     private String webroot;
 
-    public Main(int port, String webroot)
+    public Main(int port, String[] webroots)
     {
+        for(String s : webroots) LOG.info(s);
         this.port = port;
-        this.webroot = webroot;
+        this.resourcePaths= webroots;
     }
 
     public URI getServerURI()
@@ -144,8 +152,8 @@ public class Main
         ServerConnector connector = connector();
         server.addConnector(connector);
 
-        URI baseUri = getWebRootResourceUri(); 
-        ServletContextHandler sch  = getServletContextHandler(baseUri, getScratchDir());
+        ResourceCollection resources = getWebRootResources(); 
+        ServletContextHandler sch  = getServletContextHandler(resources, getScratchDir());
         server.setHandler(sch);
 
         // Start Server
@@ -166,15 +174,9 @@ public class Main
         return connector;
     }
 
-    private URI getWebRootResourceUri() throws FileNotFoundException, URISyntaxException, MalformedURLException
+    private ResourceCollection getWebRootResources() throws FileNotFoundException, URISyntaxException, MalformedURLException
     {
-        URL indexUri = new URL("file://" + webroot);
-        if (indexUri == null)
-        {
-            throw new FileNotFoundException("Unable to find resource " + webroot);
-        }
-        // Points to wherever /webroot/ (the resource) is
-        return indexUri.toURI();
+        return new ResourceCollection(this.resourcePaths);
     }
 
     /**
@@ -204,19 +206,20 @@ public class Main
      * @param scratchDir the scratch output directory
      * @return the freshly created ServletContextHandler
      */
-    private ServletContextHandler getServletContextHandler(URI baseUri, File scratchDir)
+    private ServletContextHandler getServletContextHandler(ResourceCollection resources, File scratchDir) throws URISyntaxException
     {
         ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
         sch.setContextPath("/");
         sch.setAttribute("javax.servlet.context.tempdir", scratchDir);
-        sch.setResourceBase(baseUri.toASCIIString());
+        sch.setBaseResource(resources);
         sch.setAttribute(InstanceManager.class.getName(),  new SimpleInstanceManager());
         //add a bean that will call the jsp engine's ServletContaineInitializer as the context starts
         sch.addBean(new JspStarter(sch));
         sch.setClassLoader(getUrlClassLoader());
         sch.addServlet(jspServletHolder(), "*.jsp");
+        sch.addServlet(SessionSetter.class, "/session");
         // Add Application Servlets
-        sch.addServlet(defaultServletHolder(baseUri), "/");
+        sch.addServlet(defaultServletHolder(new URI(resources.getURL().toString())), "/");
         return sch;
     }
   
@@ -232,6 +235,7 @@ public class Main
         ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
         return jspClassLoader;
     }
+
 
     /**
      * Create JSP Servlet (must be named "jsp")

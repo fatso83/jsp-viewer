@@ -37,12 +37,12 @@ if [[ \$# < 1 ]]; then
 fi
 
 # use this shell script as a jar, as the jar file is embedded!
-#java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  -Dwebroot="\$1" -jar "\$0"
+#java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  -Dwebroot="\$1" -jar "\$0"  "\${@:1}"
 
 # temporary fix until I can sort out https://github.com/fatso83/jsp-viewer/issues/1
 java    -Dtomcat.util.scan.StandardJarScanFilter.jarsToScan="taglibs-standard-impl-*"     \\
         -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip="apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*"  \\
-        -Dwebroot="\$1" -jar "$JAR"
+        -Dwebroot="\$1" -jar "$JAR" "\${@:1}"
 
 exit 0
 EOF
