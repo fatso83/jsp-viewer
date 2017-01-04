@@ -33,7 +33,6 @@ public class SessionSetter extends HttpServlet {
         for( String key : defaultProps.stringPropertyNames() ) {
             String val = defaultProps.getProperty(key);
             session.setAttribute(key, val);
-            System.out.println(key + val);
         }
 
         for( Map.Entry<String, String[]> e : paramMap.entrySet() ) {
