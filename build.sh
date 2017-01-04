@@ -24,11 +24,11 @@ create_exe(){
 #!/bin/sh
 
 function usage(){
-    echo "Usage:    \$0 <directory> [properties-file.txt]"
+    echo "Usage:    \$0 <directory> [session-props.txt [system-props.txt]]`
     echo
     echo "Example:  \$0 my-jsp-dir/ "
     echo
-    echo "The properties file is a Java properties file and must come on the form:"
+    echo "The properties file(s) is a Java properties file and must come on the form:"
     echo "myprop=1"
     echo "your.prop=2"
     echo "These will then be set as system properties"

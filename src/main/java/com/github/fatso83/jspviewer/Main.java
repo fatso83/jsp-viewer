@@ -123,6 +123,14 @@ public class Main
             Main.DEFAULT_PROPS.load(propFile);
         }
 
+        if( args.length > 1 && args[1].length() > 0 ){
+			Properties p = new Properties(System.getProperties());
+            p.load(propFile);
+
+			// set the system properties
+			System.setProperties(p);<Paste>
+		}
+
         Main main = new Main(port, webroot);
         main.start();
         main.waitForInterrupt();
