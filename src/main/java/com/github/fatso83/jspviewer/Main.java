@@ -18,6 +18,13 @@
 
 package com.github.fatso83.jspviewer;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.server.*;
+import javax.servlet.http.*;
+import javax.servlet.ServletException;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -168,7 +175,7 @@ public class Main
 
     private URI getWebRootResourceUri() throws FileNotFoundException, URISyntaxException, MalformedURLException
     {
-        URL indexUri = new URL("file://" + webroot);
+        URL indexUri = Paths.get(webroot).toAbsolutePath().toUri().toURL();
         if (indexUri == null)
         {
             throw new FileNotFoundException("Unable to find resource " + webroot);
