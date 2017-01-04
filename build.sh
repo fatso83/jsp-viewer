@@ -24,7 +24,7 @@ create_exe(){
 #!/bin/sh
 
 function usage(){
-    echo "Usage:    \$0 <directory> [session-props.txt [system-props.txt]]`
+    echo "Usage:    \$0 <directory> [session-props.txt [system-props.txt]]"
     echo
     echo "Example:  \$0 my-jsp-dir/ "
     echo

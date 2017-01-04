@@ -125,10 +125,11 @@ public class Main
 
         if( args.length > 1 && args[1].length() > 0 ){
 			Properties p = new Properties(System.getProperties());
+            FileInputStream propFile = new FileInputStream(args[1]);
             p.load(propFile);
 
 			// set the system properties
-			System.setProperties(p);<Paste>
+			System.setProperties(p);
 		}
 
         Main main = new Main(port, webroot);
