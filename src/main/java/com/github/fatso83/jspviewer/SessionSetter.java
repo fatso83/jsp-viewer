@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.jasper.servlet.*;
 import javax.servlet.http.*;
@@ -28,6 +28,13 @@ public class SessionSetter extends HttpServlet {
         HttpSession session = req.getSession();
         Map<String,String[]> paramMap = req.getParameterMap();
         String jsp = null;
+
+        Properties defaultProps = Main.DEFAULT_PROPS;
+        for( String key : defaultProps.stringPropertyNames() ) {
+            String val = defaultProps.getProperty(key);
+            session.setAttribute(key, val);
+            System.out.println(key + val);
+        }
 
         for( Map.Entry<String, String[]> e : paramMap.entrySet() ) {
             String key = e.getKey();

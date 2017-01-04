@@ -63,6 +63,9 @@ import org.eclipse.jetty.util.log.Log;
  */
 public class Main
 {
+
+    static Properties DEFAULT_PROPS = new Properties();
+
     /**
      * JspStarter
      * 
@@ -115,11 +118,9 @@ public class Main
         // load extra system properties from file
         if( args.length > 0 && args[0].length() > 0 ){
             FileInputStream propFile = new FileInputStream(args[0]);
-            Properties p = new Properties(System.getProperties());
-            p.load(propFile);
 
-            // set the system properties
-            System.setProperties(p);
+            // ugly global hack
+            Main.DEFAULT_PROPS.load(propFile);
         }
 
         Main main = new Main(port, webroot);
@@ -222,8 +223,8 @@ public class Main
         sch.addBean(new JspStarter(sch));
         sch.setClassLoader(getUrlClassLoader());
         sch.addServlet(jspServletHolder(), "*.jsp");
-        sch.addServlet(SessionSetter.class, "/session");
         // Add Application Servlets
+        sch.addServlet(SessionSetter.class, "/session");
         sch.addServlet(defaultServletHolder(baseUri), "/");
         return sch;
     }
