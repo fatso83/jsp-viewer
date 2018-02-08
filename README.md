@@ -6,9 +6,25 @@ Simple JSP viewer
 ## Why 
 Sometimes front-enders need to edit jsps without having 
 access to the actual application server to test it out.
-This enables us to see the result, and also reference
+This tool enables us to see the result, and also reference
 any system properties needed by setting them in a 
 properties file.
+
+I created this in my time as part of Making Waves to ease and enhance my 
+front-end development experience when working with 
+the login jsps for Norgesgruppen. Their login service was basically one servlet
+that chose the right jsp to compile and the right css, etc, [from parameters in
+the url](https://oauth.norgesgruppen.no/login/trumf?clientid=trumfdeploy&kjede=trumf&cssurl=https%3A%2F%2Fwww.trumf.no%2Fstatic%2Fstyles%2Fmain.css).
+
+The built-in servlet in this tool does just that, making
+it possible to test out all the permutations. Earlier, this was essentially
+coding in the dark - creating a static html and supplying it without any 
+knowledge of how it ended up in the end (a source of many bugs).
+
+## Who uses this?
+After I created this it was spread internally in Making Waves, and even some 
+other external consultants working for Norgesgruppen. I have no idea if someone
+else have found it useful (drop me a note!).
 
 ## Usage
 `view-jsp ./jsp-dir [session-props.txt [system-props.txt]]`
